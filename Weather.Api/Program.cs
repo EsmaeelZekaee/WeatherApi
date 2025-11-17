@@ -29,6 +29,7 @@ public static partial class Program
             // اینجا دیگر CreateLogger() نزن!
             builder.Host.UseSerilog((ctx, lc) => lc
                 .Enrich.FromLogContext()
+                .ReadFrom.Configuration(ctx.Configuration)   // ← این مهم است
                 .WriteTo.Async(a => a.File(
                     path: "logs/log-.json",
                     rollingInterval: RollingInterval.Day,
