@@ -37,7 +37,11 @@ public static partial class Program
                     path: "logs/log-.json",
                     rollingInterval: RollingInterval.Day,
                     retainedFileCountLimit: 7,
-                    formatter: new Serilog.Formatting.Json.JsonFormatter()
+                    fileSizeLimitBytes: 1024 * 1024 * 100, // 100MB per file
+                    rollOnFileSizeLimit: true,
+                    shared: true,
+                    flushToDiskInterval: TimeSpan.FromSeconds(2),
+                    formatter: new Serilog.Formatting.Json.JsonFormatter(renderMessage: true)
                 ))
             );
 
