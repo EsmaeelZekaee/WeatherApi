@@ -1,8 +1,10 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.Configuration;
+
+using Serilog;
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-
+namespace Weather.Api;
 public static partial class Program
 {
     public static void LineNumber(
@@ -27,7 +29,8 @@ public static partial class Program
             var builder = WebApplication.CreateBuilder(args);
 
             // اینجا دیگر CreateLogger() نزن!
-            builder.Host.UseSerilog((ctx, lc) => lc
+            builder.Host
+                .UseSerilog((ctx, lc) => lc
                 .Enrich.FromLogContext()
                 .ReadFrom.Configuration(ctx.Configuration)   // ← این مهم است
                 .WriteTo.Async(a => a.File(
@@ -38,8 +41,9 @@ public static partial class Program
                 ))
             );
 
+            builder.Configuration.AddJsonFile("appsettings.json");
+            
             var app = builder.Build();
-
             app.MapGet("/", () =>
             {
                 Log.Information($"Weather endpoint called at {DateTime.UtcNow}");
