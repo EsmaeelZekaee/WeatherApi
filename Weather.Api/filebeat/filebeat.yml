@@ -1,0 +1,24 @@
+﻿filebeat.inputs:
+  - type: filestream
+    id: app-logs
+    paths:
+      - /app/logs/log-*.json
+    # فایل‌های خیلی قدیمی رو نادیده بگیر
+    ignore_older: 24h
+    clean_inactive: 48h
+
+output.logstash:
+  hosts: ["host.docker.internal:5044"]
+  # تعداد کانکشن‌های موازی به Logstash
+  worker: 8
+  # تعداد رویداد در هر batch
+  bulk_max_size: 200
+
+# استفاده از memory queue برای سرعت بیشتر
+queue.mem:
+  events: 4096
+  flush.min_events: 512
+  flush.timeout: 5s
+
+setup.template.enabled: true
+setup.ilm.enabled: false

@@ -1,0 +1,1 @@
+docker run --rm --cpus="8" -v "${PWD}:/scripts" -w /scripts grafana/k6 run loadtest.js
